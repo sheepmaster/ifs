@@ -1,0 +1,41 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = ScreenSaverView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            ACTIONS = {
+                checkUpdates = id; 
+                "closeSheet_cancel" = id; 
+                "closeSheet_save" = id; 
+                updateConfigureSheet = id; 
+            }; 
+            CLASS = ifsView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                IBCancel = id; 
+                IBCheckVersion = id; 
+                IBSave = id; 
+                IBSimiColor = id; 
+                IBSimiColorTxt = id; 
+                IBUpdatesInfo = id; 
+                IBalfa = id; 
+                IBalfaTxt = id; 
+                IBblur = id; 
+                IBblurTxt = id; 
+                IBcolorMode = id; 
+                IBcolorModeTxt = id; 
+                IBmainMonitorOnly = id; 
+                IBncolors = id; 
+                IBncolorsBut = id; 
+                IBncolorsTxt = id; 
+                IBpointSize = id; 
+                IBpointSizeTxt = id; 
+                IBpointSmoothing = id; 
+                IBversionNumberField = id; 
+                configureSheet = id; 
+            }; 
+            SUPERCLASS = ScreenSaverView; 
+        }
+    ); 
+    IBVersion = 1; 
+}
