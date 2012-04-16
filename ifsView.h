@@ -43,10 +43,10 @@ typedef int F_PT;
 #define MAX_SIMI  6
 
 /* settings for a PC 120Mhz... */
-#define MAX_DEPTH_2  10
-#define MAX_DEPTH_3  6
-#define MAX_DEPTH_4  4
-#define MAX_DEPTH_5  3
+#define MAX_DEPTH_2  11
+#define MAX_DEPTH_3  7
+#define MAX_DEPTH_4  5
+#define MAX_DEPTH_5  4
 
 #define DBL_To_F_PT(x)  (F_PT)( (DBL)(UNIT)*(x) )
 
