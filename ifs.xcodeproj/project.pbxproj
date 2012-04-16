@@ -3,19 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4055AE540C9164B1004BE5CD /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4055AE530C9164B1004BE5CD /* OpenGL.framework */; };
-		4055AE6D0C9164C5004BE5CD /* ifsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4055AE660C9164C5004BE5CD /* ifsView.m */; };
-		4055AE6E0C9164C5004BE5CD /* ifsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4055AE670C9164C5004BE5CD /* ifsView.h */; };
-		4055AE6F0C9164C5004BE5CD /* colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4055AE680C9164C5004BE5CD /* colors.m */; };
-		4055AE700C9164C5004BE5CD /* colors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4055AE690C9164C5004BE5CD /* colors.h */; };
-		4055AE710C9164C5004BE5CD /* ifs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4055AE6A0C9164C5004BE5CD /* ifs.nib */; };
-		4055AE720C9164C5004BE5CD /* ifsIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4055AE6B0C9164C5004BE5CD /* ifsIcon.icns */; };
-		4055AE800C91652B004BE5CD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4055AE7E0C91652B004BE5CD /* Localizable.strings */; };
-		4055AE990C9165BE004BE5CD /* ifs_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 4055AE980C9165BE004BE5CD /* ifs_Prefix.pch */; };
+		402A9EB8105699CA00FDDD2F /* colors.h in Headers */ = {isa = PBXBuildFile; fileRef = 402A9EB5105699CA00FDDD2F /* colors.h */; };
+		402A9EB9105699CA00FDDD2F /* colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 402A9EB6105699CA00FDDD2F /* colors.m */; };
+		402A9ED910569A0500FDDD2F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 402A9ED710569A0500FDDD2F /* Localizable.strings */; };
+		402A9EEB10569AD800FDDD2F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 402A9EEA10569AD800FDDD2F /* OpenGL.framework */; };
+		8D255AC70486D3F9007BF209 /* ifs_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCFA80370C50100C91783 /* ifs_Prefix.pch */; };
+		8D255AC80486D3F9007BF209 /* ifsView.h in Headers */ = {isa = PBXBuildFile; fileRef = F50079790118B23001CA0E54 /* ifsView.h */; };
+		8D255ACC0486D3F9007BF209 /* ifsView.m in Sources */ = {isa = PBXBuildFile; fileRef = F500797A0118B23001CA0E54 /* ifsView.m */; };
 		8D255ACE0486D3F9007BF209 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		8D255ACF0486D3F9007BF209 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F27B2DFFEEEFEF11CA0E56 /* ScreenSaver.framework */; };
 /* End PBXBuildFile section */
@@ -25,18 +23,20 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		4055AE530C9164B1004BE5CD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
-		4055AE660C9164C5004BE5CD /* ifsView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ifsView.m; sourceTree = "<group>"; };
-		4055AE670C9164C5004BE5CD /* ifsView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ifsView.h; sourceTree = "<group>"; };
-		4055AE680C9164C5004BE5CD /* colors.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = colors.m; sourceTree = "<group>"; };
-		4055AE690C9164C5004BE5CD /* colors.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = colors.h; sourceTree = "<group>"; };
-		4055AE6A0C9164C5004BE5CD /* ifs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ifs.nib; sourceTree = "<group>"; };
-		4055AE6B0C9164C5004BE5CD /* ifsIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifsIcon.icns; sourceTree = "<group>"; };
-		4055AE6C0C9164C5004BE5CD /* ifs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = ifs.c; sourceTree = "<group>"; };
-		4055AE7F0C91652B004BE5CD /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
-		4055AE980C9165BE004BE5CD /* ifs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ifs_Prefix.pch; sourceTree = "<group>"; };
+		32DBCFA80370C50100C91783 /* ifs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ifs_Prefix.pch; sourceTree = "<group>"; };
+		402A9EB5105699CA00FDDD2F /* colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colors.h; sourceTree = "<group>"; };
+		402A9EB6105699CA00FDDD2F /* colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = colors.m; sourceTree = "<group>"; };
+		402A9ECB105699DD00FDDD2F /* ifsIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ifsIcon.icns; sourceTree = "<group>"; };
+		402A9ECC105699E100FDDD2F /* ifs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ifs.nib; sourceTree = "<group>"; };
+		402A9ED810569A0500FDDD2F /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		402A9EDA10569A0D00FDDD2F /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		402A9EE010569A1C00FDDD2F /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
+		402A9EEA10569AD800FDDD2F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		4081B6A6153C8DB3002266A4 /* ifs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ifs.c; sourceTree = "<group>"; };
 		8D255AD20486D3F9007BF209 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D255AD30486D3F9007BF209 /* ifs.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ifs.saver; sourceTree = BUILT_PRODUCTS_DIR; };
+		F50079790118B23001CA0E54 /* ifsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ifsView.h; sourceTree = "<group>"; };
+		F500797A0118B23001CA0E54 /* ifsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ifsView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,7 +46,7 @@
 			files = (
 				8D255ACE0486D3F9007BF209 /* Cocoa.framework in Frameworks */,
 				8D255ACF0486D3F9007BF209 /* ScreenSaver.framework in Frameworks */,
-				4055AE540C9164B1004BE5CD /* OpenGL.framework in Frameworks */,
+				402A9EEB10569AD800FDDD2F /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,14 +56,8 @@
 		089C166AFE841209C02AAC07 /* ifs */ = {
 			isa = PBXGroup;
 			children = (
-				4055AE660C9164C5004BE5CD /* ifsView.m */,
-				4055AE670C9164C5004BE5CD /* ifsView.h */,
-				4055AE680C9164C5004BE5CD /* colors.m */,
-				4055AE690C9164C5004BE5CD /* colors.h */,
-				4055AE6A0C9164C5004BE5CD /* ifs.nib */,
-				4055AE6B0C9164C5004BE5CD /* ifsIcon.icns */,
-				4055AE6C0C9164C5004BE5CD /* ifs.c */,
-				4055AE980C9165BE004BE5CD /* ifs_Prefix.pch */,
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				32DBCFA70370C4F300C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
@@ -83,18 +77,31 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4055AE7E0C91652B004BE5CD /* Localizable.strings */,
+				402A9ECC105699E100FDDD2F /* ifs.nib */,
+				402A9ECB105699DD00FDDD2F /* ifsIcon.icns */,
 				8D255AD20486D3F9007BF209 /* Info.plist */,
+				402A9ED710569A0500FDDD2F /* Localizable.strings */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				402A9EB5105699CA00FDDD2F /* colors.h */,
+				402A9EB6105699CA00FDDD2F /* colors.m */,
+				F50079790118B23001CA0E54 /* ifsView.h */,
+				F500797A0118B23001CA0E54 /* ifsView.m */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4055AE530C9164B1004BE5CD /* OpenGL.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				06F27B2DFFEEEFEF11CA0E56 /* ScreenSaver.framework */,
+				402A9EEA10569AD800FDDD2F /* OpenGL.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -116,6 +123,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		32DBCFA70370C4F300C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4081B6A6153C8DB3002266A4 /* ifs.c */,
+				32DBCFA80370C50100C91783 /* ifs_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -123,9 +139,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4055AE6E0C9164C5004BE5CD /* ifsView.h in Headers */,
-				4055AE700C9164C5004BE5CD /* colors.h in Headers */,
-				4055AE990C9165BE004BE5CD /* ifs_Prefix.pch in Headers */,
+				8D255AC70486D3F9007BF209 /* ifs_Prefix.pch in Headers */,
+				8D255AC80486D3F9007BF209 /* ifsView.h in Headers */,
+				402A9EB8105699CA00FDDD2F /* colors.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,8 +174,16 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = EF7AD73108BB986600CE4634 /* Build configuration list for PBXProject "ifs" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Italian,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* ifs */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -174,9 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4055AE710C9164C5004BE5CD /* ifs.nib in Resources */,
-				4055AE720C9164C5004BE5CD /* ifsIcon.icns in Resources */,
-				4055AE800C91652B004BE5CD /* Localizable.strings in Resources */,
+				402A9ED910569A0500FDDD2F /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,18 +219,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4055AE6D0C9164C5004BE5CD /* ifsView.m in Sources */,
-				4055AE6F0C9164C5004BE5CD /* colors.m in Sources */,
+				8D255ACC0486D3F9007BF209 /* ifsView.m in Sources */,
+				402A9EB9105699CA00FDDD2F /* colors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		4055AE7E0C91652B004BE5CD /* Localizable.strings */ = {
+		402A9ED710569A0500FDDD2F /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4055AE7F0C91652B004BE5CD /* English */,
+				402A9ED810569A0500FDDD2F /* English */,
+				402A9EDA10569A0D00FDDD2F /* French */,
+				402A9EE010569A1C00FDDD2F /* Italian */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -219,29 +243,28 @@
 		EF7AD72E08BB986600CE4634 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				ARCHS = (
+					x86_64,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				GCC_ENABLE_OBJC_GC = unsupported;
+				"GCC_ENABLE_OBJC_GC[sdk=macosx10.6][arch=x86_64]" = required;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ifs_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = ifs;
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = saver;
-				ZERO_LINK = YES;
 			};
 			name = Debug;
 		};
 		EF7AD72F08BB986600CE4634 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ifs_Prefix.pch;
@@ -255,28 +278,19 @@
 		EF7AD73208BB986600CE4634 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Debug;
 		};
 		EF7AD73308BB986600CE4634 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};
