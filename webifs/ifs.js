@@ -7,12 +7,13 @@ function gaussRand(c, a, s) {
 function halfGaussRand(c, a, s) {
   var y = Math.random();
   y = a * (1 - Math.exp(-y * y * s)) / (1 - Math.exp(-s));
-  return c + y;
+  return c + y;  // TODO: unify with gaussRand()
 }
 
 var colorIndex;
 var colorSpan;
 
+// TODO: make a method on Fractal?
 function randomSimis(f, simis, nColors, colorType) {
   for (var i = simis.length - 1; i >= 0; i--) {
     var cur = simis[i];
@@ -50,32 +51,75 @@ function transform(simi, xo, yo) {
   }
 }
 
-var buf;
-var pointno;
-
+// TODO: make a method on Fractal?
 function trace(f, xo, yo) {
-  for (var i = f.nb_simi - 1; i >= 0; i--) {
-    var cur = f.components[f.components.length - i];
+  for (var i = f.components.length - 1; i >= 0; i--) {
+    var cur = f.components[f.components.length - i - 1];
     var transformed = transform(cur, xo, yo);
     var xd = Math.ceil(transformed.x * f.lx);
     var xy = Math.ceil(transformed.x * f.lx);
-    buf[i].x = f.lx + xd;
-    buf[i].y = f.ly - yd;
-    pointno[i]++;
-    if ((f->depth > 0) &&
+    f.buffer[i].push({
+      x: f.lx + xd,
+      y: f.ly - yd
+    });
+    if ((f.depth > 0) &&
         (Math.abs(transformed.x - xo) >= 16) &&
         (Math.abs(transformed.y - yo) >= 16)) {
-      f->depth--;
+      f.depth--;
       trace(f, transformed.x, transformed.y);
-      f->depth++;
+      f.depth++;
     }
   }
 }
 
+var alpha;
+
+function drawFractal(f) {
+  for (var i = 0; i < f.components.length; i++) {
+    var cur = f.components[i];
+    cur.ct = Math.cos(cur.a);
+    cut.st = Math.sin(cur.a);
+    cur.ct2 = Math.cos(cur.a2);
+    cur.st2 = Math.sin(cur.a2);
+  }
+
+  for (var i = 0; i < f.buffer.length; i++) {
+    f.buffer[i] = [];
+  }
+
+  for (var i = 0; i < f.components.length; i++) {
+    var cur = f.components[i];
+    var xo = cur.cx;
+    var yo = cur.cy;
+    for (var j = 0; j < f.components.length; j++) {
+      if (i == j)
+        continue;
+
+      var transformed = transform(f.components[j], xo, yo);
+      trace(f, transformed.x, transformed.y);
+    }
+  }
+
+  colorindex++;
+  if (colorindex >= nColors)
+    colorindex = 0;
+
+  for (var i = 0; i < f.components.length; i++) {
+    var cur = f.components[i];
+    var colornum = cur.colorindex + colorindex % ncolors;
+    // glColor4f(colors[colornum].red, colors[colornum].green, colors[colornum].blue, alpha);
+    // glBegin(GL_POINTS);
+    for (var j = 0; j < pointNo[i]; j++) {
+      // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
+    }
+    // glEnd();
+  }
+}
 
 function init() {
   var canvas = document.getElementById('canvas');
-  var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  var gl = canvas.getContext('webgl') ||
+           canvas.getContext('experimental-webgl');
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
   gl.enable(gl.DEPTH_TEST);           // Enable depth testing
