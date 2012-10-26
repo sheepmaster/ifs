@@ -253,7 +253,6 @@
 				GCC_PREFIX_HEADER = ifs_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = ifs;
 				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = saver;
@@ -271,6 +270,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
 				PRODUCT_NAME = ifs;
+				SDKROOT = macosx10.6;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Release;
@@ -287,10 +287,10 @@
 		EF7AD73308BB986600CE4634 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};
