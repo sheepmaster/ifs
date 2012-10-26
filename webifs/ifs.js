@@ -1,3 +1,7 @@
+function nRand(n) {
+  Math.floor(Math.random() * n);
+}
+
 function gaussRand(c, a, s) {
   var y = Math.random();
   y = a * (1 - Math.exp(-y * y * s)) / (1 - Math.exp(-s));
@@ -29,7 +33,7 @@ function randomSimis(f, simis, start, offset, nColors, colorType) {
       cur.colorindex = colorIndex;
       colorIndex += colorSpan;
     } else {  // random
-      cur.colorindex = Math.floor(Math.random() * nColors);
+      cur.colorindex = nRand(nColors);
     }
   }
 }
@@ -116,6 +120,56 @@ function drawFractal(f) {
   }
 }
 
+function initIfs(f) {
+  var r = nRand(4) + 2;  // Number of centers
+  switch(r) {
+    case 2: {
+      f.depth = 11;
+      f.rMean = 0.7;
+      f.drMean = 0.3;
+      f.dr2Mean = 0.4;
+      break;
+    }
+    case 3: {
+      f.depth = 7;
+      f.rMean = 0.6;
+      f.drMean = 0.4;
+      f.dr2Mean = 0.3;
+      break;
+    }
+    case 4: {
+      f.depth = 5;
+      f.rMean = 0.5;
+      f.drMean = 0.4;
+      f.dr2Mean = 0.3;
+      break;
+    }
+    case 5: {
+      f.depth = 4;
+      f.rMean = 0.5;
+      f.drMean = 0.4;
+      f.dr2Mean = 0.3;
+      break;
+    }
+    default: {
+      throw new Error('Invalid number of centers: ' + i);
+    }
+  }
+  f.nbSimi = r;
+  f.maxPt = Math.pow(f.nbSimi - 1, f.depth + 1);
+
+  f.buffer = [];  // TODO: length f.nbSimi
+  for (var i = 0; i < f.nbSimi; i++) {
+    f.buffer[i] = [];  // TODO: length f.maxPt
+  }
+
+  f.speed = 6;
+  f.count = 0;
+
+  f.components = [];  // TODO: length 5 * f.nbSimi
+  randomSimis(f, f.components, 0, 5 * f.nbSimi, ncolors, simiColor);
+}
+
 function drawIfs(f) {
   var u = f.count * f.speed / 1000;
   var uu = u * u;
@@ -181,6 +235,10 @@ function init() {
   gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
   // Clear the color as well as the depth buffer.
   gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
+  var f = {};
+  initIfs(f);
+  drawIfs(f);
 }
 
 document.addEventListener('DOMContentLoaded', init);
