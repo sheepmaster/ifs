@@ -1,5 +1,5 @@
 function nRand(n) {
-  Math.floor(Math.random() * n);
+  return Math.floor(Math.random() * n);
 }
 
 function gaussRand(c, a, s) {
@@ -14,13 +14,13 @@ function halfGaussRand(c, a, s) {
   return c + y;  // TODO: unify with gaussRand()
 }
 
-var colorIndex;
-var colorSpan;
+var globalColorIndex = 0;  // XXX
+var colorSpan = 50;
 
 // TODO: make a method on Fractal?
 function randomSimis(f, simis, start, offset, nColors, colorType) {
   for (var i = offset - 1; i >= 0; i--) {
-    var cur = simis[offset + i];  // XXX
+    var cur = {};
     cur.cx = gaussRand(0, 0.8, 4.0);
     cur.cy = gaussRand(0, 0.8, 4.0);
     cur.r = gaussRand(f.rMean, f.drMean, 3.0);
@@ -28,13 +28,14 @@ function randomSimis(f, simis, start, offset, nColors, colorType) {
     cur.a = gaussRand(0, Math.PI * 2, 4.0);
     cur.a2 = gaussRand(0, Math.PI * 2, 4.0);
     if (colorType == 0) {  // single color
-      cur.colorindex = 0;
+      cur.colorIndex = 0;
     } else if (colorType == 1) {  // gradient
-      cur.colorindex = colorIndex;
-      colorIndex += colorSpan;
+      cur.colorIndex = globalColorIndex;
+      globalColorIndex += colorSpan;
     } else {  // random
       cur.colorindex = nRand(nColors);
     }
+    simis[start + i] = cur;
   }
 }
 
@@ -61,14 +62,14 @@ function trace(f, xo, yo) {
     var cur = f.components[f.nbSimi - i - 1];
     var transformed = transform(cur, xo, yo);
     var xd = Math.ceil(transformed.x * f.lx);
-    var xy = Math.ceil(transformed.x * f.lx);
+    var yd = Math.ceil(transformed.x * f.ly);
     f.buffer[i].push({
       x: f.lx + xd,
       y: f.ly - yd
     });
     if ((f.depth > 0) &&
-        (Math.abs(transformed.x - xo) >= 16) &&
-        (Math.abs(transformed.y - yo) >= 16)) {
+        (Math.abs(transformed.x - xo) >= 1/256) &&
+        (Math.abs(transformed.y - yo) >= 1/256)) {
       f.depth--;
       trace(f, transformed.x, transformed.y);
       f.depth++;
@@ -76,13 +77,16 @@ function trace(f, xo, yo) {
   }
 }
 
-var alpha;
+var alpha = 1;
+
+var nColors = 200;
+var colorIndex = 0;  // XXX
 
 function drawFractal(f) {
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
     cur.ct = Math.cos(cur.a);
-    cut.st = Math.sin(cur.a);
+    cur.st = Math.sin(cur.a);
     cur.ct2 = Math.cos(cur.a2);
     cur.st2 = Math.sin(cur.a2);
   }
@@ -104,23 +108,26 @@ function drawFractal(f) {
     }
   }
 
-  colorindex++;
-  if (colorindex >= nColors)
-    colorindex = 0;
+  colorIndex++;
+  if (colorIndex >= nColors)
+    colorIndex = 0;
 
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
-    var colornum = cur.colorindex + colorindex % ncolors;
-    // glColor4f(colors[colornum].red, colors[colornum].green, colors[colornum].blue, alpha);
+    var colorNum = cur.colorIndex + colorIndex % nColors;
+    // glColor4f(colors[colorNum].red, colors[colorNum].green, colors[colorNum].blue, alpha);
     // glBegin(GL_POINTS);
-    for (var j = 0; j < pointNo[i]; j++) {
+    for (var j = 0; j < f.buffer[i].length; j++) {
+      // console.log(f.buffer[i][j].x, f.buffer[i][j].y);
       // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
     }
     // glEnd();
   }
 }
 
-function initIfs(f) {
+var simiColor = 1;
+
+function initIfs(f, width, height) {
   var r = nRand(4) + 2;  // Number of centers
   switch(r) {
     case 2: {
@@ -152,7 +159,7 @@ function initIfs(f) {
       break;
     }
     default: {
-      throw new Error('Invalid number of centers: ' + i);
+      throw new Error('Invalid number of centers: ' + r);
     }
   }
   f.nbSimi = r;
@@ -165,9 +172,11 @@ function initIfs(f) {
 
   f.speed = 6;
   f.count = 0;
+  f.lx = (width - 1) / 2;
+  f.ly = (height - 1) / 2;
 
   f.components = [];  // TODO: length 5 * f.nbSimi
-  randomSimis(f, f.components, 0, 5 * f.nbSimi, ncolors, simiColor);
+  randomSimis(f, f.components, 0, 5 * f.nbSimi, nColors, simiColor);
 }
 
 function drawIfs(f) {
@@ -189,12 +198,12 @@ function drawIfs(f) {
     var s3 = f.components[i + 3 * nbSimi];
     var s4 = f.components[i + 4 * nbSimi];
 
-    s.cx = u0 * s1.cx + u1 * s2.cx + u2 * s3.cx + u3 * s4.cx,
-    s.cy = u0 * s1.cy + u1 * s2.cy + u2 * s3.cy + u3 * s4.cy,
-    s.r = u0 * s1.r + u1 * s2.r + u2 * s3.r + u3 * s4.r,
-    s.r2 = u0 * s1.r2 + u1 * s2.r2 + u2 * s3.r2 + u3 * s4.r2,
-    s.a = u0 * s1.a + u1 * s2.a + u2 * s3.a + u3 * s4.a,
-    s.a2 = u0 * s1.a2 + u1 * s2.a2 + u2 * s3.a2 + u3 * s4.a2,
+    s.cx = u0 * s1.cx + u1 * s2.cx + u2 * s3.cx + u3 * s4.cx;
+    s.cy = u0 * s1.cy + u1 * s2.cy + u2 * s3.cy + u3 * s4.cy;
+    s.r = u0 * s1.r + u1 * s2.r + u2 * s3.r + u3 * s4.r;
+    s.r2 = u0 * s1.r2 + u1 * s2.r2 + u2 * s3.r2 + u3 * s4.r2;
+    s.a = u0 * s1.a + u1 * s2.a + u2 * s3.a + u3 * s4.a;
+    s.a2 = u0 * s1.a2 + u1 * s2.a2 + u2 * s3.a2 + u3 * s4.a2;
   }
 
   drawFractal(f);
@@ -208,12 +217,12 @@ function drawIfs(f) {
 
       f.components[i + nbSimi] = s4;
 
-      s2[i].cx = u0 * s1.cx + u1 * s2.cx + u2 * s3.cx + u3 * s4.cx,
-      s2[i].cy = u0 * s1.cy + u1 * s2.cy + u2 * s3.cy + u3 * s4.cy,
-      s2[i].r = u0 * s1.r + u1 * s2.r + u2 * s3.r + u3 * s4.r,
-      s2[i].r2 = u0 * s1.r2 + u1 * s2.r2 + u2 * s3.r2 + u3 * s4.r2,
-      s2[i].a = u0 * s1.a + u1 * s2.a + u2 * s3.a + u3 * s4.a,
-      s2[i].a2 = u0 * s1.a2 + u1 * s2.a2 + u2 * s3.a2 + u3 * s4.a2,
+      s2[i].cx = u0 * s1.cx + u1 * s2.cx + u2 * s3.cx + u3 * s4.cx;
+      s2[i].cy = u0 * s1.cy + u1 * s2.cy + u2 * s3.cy + u3 * s4.cy;
+      s2[i].r = u0 * s1.r + u1 * s2.r + u2 * s3.r + u3 * s4.r;
+      s2[i].r2 = u0 * s1.r2 + u1 * s2.r2 + u2 * s3.r2 + u3 * s4.r2;
+      s2[i].a = u0 * s1.a + u1 * s2.a + u2 * s3.a + u3 * s4.a;
+      s2[i].a2 = u0 * s1.a2 + u1 * s2.a2 + u2 * s3.a2 + u3 * s4.a2;
     }
 
     randomSimis(f, f.components, 3 * nbSimi, nbSimi, nColors, simiColor);
@@ -237,7 +246,7 @@ function init() {
   gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 
   var f = {};
-  initIfs(f);
+  initIfs(f, canvas.width, canvas.height);
   drawIfs(f);
 }
 
