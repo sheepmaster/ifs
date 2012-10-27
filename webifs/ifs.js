@@ -53,9 +53,9 @@ function transform(simi, xo, yo) {
   yy = yy * simi.r2;
 
   return {
-    x: xo * simi.ct - yo * simi.st + xx * simi.ct2 + simi.cx,
-    y: yo * simi.st + yo * simi.ct + xx * simi.st2 + simi.cy
-  }
+    x: xo * simi.ct - yo * simi.st + xx * simi.ct2 - yy * simi.st2 + simi.cx,
+    y: yo * simi.st + yo * simi.ct + xx * simi.st2 + yy * simi.ct2 + simi.cy
+  };
 }
 
 // TODO: make a method on Fractal?
@@ -114,12 +114,9 @@ function drawFractal(f) {
   if (colorIndex >= nColors)
     colorIndex = 0;
 
-  var width = 300;  // XXX
-  var height = 150;  // XXX
-  var bufferData = context.createImageData(width, height);
-  context.fillStyle = "#000000";
-  context.fill();
+  context.fillRect(0, 0, width, height);
 
+  var bufferData = context.createImageData(width, height);
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
     var colorNum = cur.colorIndex + colorIndex % nColors;
@@ -127,17 +124,21 @@ function drawFractal(f) {
     // glBegin(GL_POINTS);
     for (var j = 0; j < f.buffer[i].length; j++) {
       var coords = f.buffer[i][j];
-      bufferData.data[coords.y * height + coords.x + 1] = 255;
+      bufferData.data[4 * (coords.y * height + coords.x) + 1] = 255;
       // console.log(.x, f.buffer[i][j].y);
       // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
     }
     // glEnd();
   }
+  context.putImageData(bufferData, 0, 0);
 }
 
 var simiColor = 1;
 
-function initIfs(f, width, height) {
+var width;
+var height;
+
+function initIfs(f) {
   var r = nRand(4) + 2;  // Number of centers
   switch(r) {
     case 2: {
@@ -248,8 +249,11 @@ function init() {
   var canvas = document.getElementById('canvas');
   context = canvas.getContext('2d');
 
+  width = canvas.width = canvas.clientWidth;
+  height = canvas.height = canvas.clientHeight;
+
   var f = {};
-  initIfs(f, canvas.width, canvas.height);
+  initIfs(f);
   drawIfs(f);
 }
 
