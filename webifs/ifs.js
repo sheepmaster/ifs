@@ -1,3 +1,5 @@
+var context;
+
 function nRand(n) {
   return Math.floor(Math.random() * n);
 }
@@ -64,8 +66,8 @@ function trace(f, xo, yo) {
     var xd = Math.ceil(transformed.x * f.lx);
     var yd = Math.ceil(transformed.x * f.ly);
     f.buffer[i].push({
-      x: f.lx + xd,
-      y: f.ly - yd
+      x: Math.round(f.lx + xd),
+      y: Math.round(f.ly - yd)
     });
     if ((f.depth > 0) &&
         (Math.abs(transformed.x - xo) >= 1/256) &&
@@ -112,13 +114,21 @@ function drawFractal(f) {
   if (colorIndex >= nColors)
     colorIndex = 0;
 
+  var width = 300;  // XXX
+  var height = 150;  // XXX
+  var bufferData = context.createImageData(width, height);
+  context.fillStyle = "#000000";
+  context.fill();
+
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
     var colorNum = cur.colorIndex + colorIndex % nColors;
     // glColor4f(colors[colorNum].red, colors[colorNum].green, colors[colorNum].blue, alpha);
     // glBegin(GL_POINTS);
     for (var j = 0; j < f.buffer[i].length; j++) {
-      // console.log(f.buffer[i][j].x, f.buffer[i][j].y);
+      var coords = f.buffer[i][j];
+      bufferData.data[coords.y * height + coords.x + 1] = 255;
+      // console.log(.x, f.buffer[i][j].y);
       // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
     }
     // glEnd();
@@ -236,14 +246,7 @@ function drawIfs(f) {
 
 function init() {
   var canvas = document.getElementById('canvas');
-  var gl = canvas.getContext('webgl') ||
-           canvas.getContext('experimental-webgl');
-
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
-  gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-  gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
-  // Clear the color as well as the depth buffer.
-  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  context = canvas.getContext('2d');
 
   var f = {};
   initIfs(f, canvas.width, canvas.height);
