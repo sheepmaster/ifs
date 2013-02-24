@@ -54,7 +54,7 @@ function transform(simi, xo, yo) {
 
   return {
     x: xo * simi.ct - yo * simi.st + xx * simi.ct2 - yy * simi.st2 + simi.cx,
-    y: yo * simi.st + yo * simi.ct + xx * simi.st2 + yy * simi.ct2 + simi.cy
+    y: xo * simi.st + yo * simi.ct + xx * simi.st2 + yy * simi.ct2 + simi.cy
   };
 }
 
@@ -64,7 +64,7 @@ function trace(f, xo, yo) {
     var cur = f.components[f.nbSimi - i - 1];
     var transformed = transform(cur, xo, yo);
     var xd = Math.ceil(transformed.x * f.lx);
-    var yd = Math.ceil(transformed.x * f.ly);
+    var yd = Math.ceil(transformed.y * f.ly);
     f.buffer[i].push({
       x: Math.round(f.lx + xd),
       y: Math.round(f.ly - yd)
@@ -114,9 +114,12 @@ function drawFractal(f) {
   if (colorIndex >= nColors)
     colorIndex = 0;
 
-  context.fillRect(0, 0, width, height);
+  // context.fillRect(0, 0, width, height);
 
   var bufferData = context.createImageData(width, height);
+  for (var i = 0; i < height * width; i++) {
+    bufferData.data[4 * i + 3] = 255;
+  }
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
     var colorNum = cur.colorIndex + colorIndex % nColors;
@@ -124,7 +127,7 @@ function drawFractal(f) {
     // glBegin(GL_POINTS);
     for (var j = 0; j < f.buffer[i].length; j++) {
       var coords = f.buffer[i][j];
-      bufferData.data[4 * (coords.y * height + coords.x) + 1] = 255;
+      bufferData.data[4 * (coords.y * width + coords.x) + 1] = 255;
       // console.log(.x, f.buffer[i][j].y);
       // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
     }
@@ -228,12 +231,12 @@ function drawIfs(f) {
 
       f.components[i + nbSimi] = s4;
 
-      s2[i].cx = u0 * s1.cx + u1 * s2.cx + u2 * s3.cx + u3 * s4.cx;
-      s2[i].cy = u0 * s1.cy + u1 * s2.cy + u2 * s3.cy + u3 * s4.cy;
-      s2[i].r = u0 * s1.r + u1 * s2.r + u2 * s3.r + u3 * s4.r;
-      s2[i].r2 = u0 * s1.r2 + u1 * s2.r2 + u2 * s3.r2 + u3 * s4.r2;
-      s2[i].a = u0 * s1.a + u1 * s2.a + u2 * s3.a + u3 * s4.a;
-      s2[i].a2 = u0 * s1.a2 + u1 * s2.a2 + u2 * s3.a2 + u3 * s4.a2;
+      s2.cx = 2 * s4.cx - s3.cx;
+      s2.cy = 2 * s4.cy - s3.cy;
+      s2.r  = 2 * s4.r  - s3.r;
+      s2.r2 = 2 * s4.r2 - s3.r2;
+      s2.a  = 2 * s4.a  - s3.a;
+      s2.a2 = 2 * s4.a2 - s3.a2;
     }
 
     randomSimis(f, f.components, 3 * nbSimi, nbSimi, nColors, simiColor);
@@ -243,6 +246,8 @@ function drawIfs(f) {
   } else {
     f.count++;
   }
+
+  window.requestAnimationFrame(drawIfs);
 }
 
 function init() {
