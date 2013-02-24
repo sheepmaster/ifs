@@ -20,7 +20,7 @@ var globalColorIndex = 0;  // XXX
 var colorSpan = 50;
 
 // TODO: make a method on Fractal?
-function randomSimis(f, simis, start, offset, nColors, colorType) {
+function randomSimis(simis, start, offset, nColors, colorType) {
   for (var i = offset - 1; i >= 0; i--) {
     var cur = {};
     cur.cx = gaussRand(0, 0.8, 4.0);
@@ -58,8 +58,9 @@ function transform(simi, xo, yo) {
   };
 }
 
+var f = {};
 // TODO: make a method on Fractal?
-function trace(f, xo, yo) {
+function trace(xo, yo) {
   for (var i = f.nbSimi - 1; i >= 0; i--) {
     var cur = f.components[f.nbSimi - i - 1];
     var transformed = transform(cur, xo, yo);
@@ -73,7 +74,7 @@ function trace(f, xo, yo) {
         (Math.abs(transformed.x - xo) >= 1/256) &&
         (Math.abs(transformed.y - yo) >= 1/256)) {
       f.depth--;
-      trace(f, transformed.x, transformed.y);
+      trace(transformed.x, transformed.y);
       f.depth++;
     }
   }
@@ -84,7 +85,7 @@ var alpha = 1;
 var nColors = 200;
 var colorIndex = 0;  // XXX
 
-function drawFractal(f) {
+function drawFractal() {
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
     cur.ct = Math.cos(cur.a);
@@ -106,7 +107,7 @@ function drawFractal(f) {
         continue;
 
       var transformed = transform(f.components[j], xo, yo);
-      trace(f, transformed.x, transformed.y);
+      trace(transformed.x, transformed.y);
     }
   }
 
@@ -141,7 +142,7 @@ var simiColor = 1;
 var width;
 var height;
 
-function initIfs(f) {
+function initIfs() {
   var r = nRand(4) + 2;  // Number of centers
   switch(r) {
     case 2: {
@@ -190,10 +191,10 @@ function initIfs(f) {
   f.ly = (height - 1) / 2;
 
   f.components = [];  // TODO: length 5 * f.nbSimi
-  randomSimis(f, f.components, 0, 5 * f.nbSimi, nColors, simiColor);
+  randomSimis(f.components, 0, 5 * f.nbSimi, nColors, simiColor);
 }
 
-function drawIfs(f) {
+function drawIfs() {
   var u = f.count * f.speed / 1000;
   var uu = u * u;
   var v = 1 - u;
@@ -214,13 +215,13 @@ function drawIfs(f) {
 
     s.cx = u0 * s1.cx + u1 * s2.cx + u2 * s3.cx + u3 * s4.cx;
     s.cy = u0 * s1.cy + u1 * s2.cy + u2 * s3.cy + u3 * s4.cy;
-    s.r = u0 * s1.r + u1 * s2.r + u2 * s3.r + u3 * s4.r;
+    s.r  = u0 * s1.r  + u1 * s2.r  + u2 * s3.r  + u3 * s4.r;
     s.r2 = u0 * s1.r2 + u1 * s2.r2 + u2 * s3.r2 + u3 * s4.r2;
-    s.a = u0 * s1.a + u1 * s2.a + u2 * s3.a + u3 * s4.a;
+    s.a  = u0 * s1.a  + u1 * s2.a  + u2 * s3.a  + u3 * s4.a;
     s.a2 = u0 * s1.a2 + u1 * s2.a2 + u2 * s3.a2 + u3 * s4.a2;
   }
 
-  drawFractal(f);
+  drawFractal();
 
   if (f.count >= 1000 / f.speed) {
     for (var i = 0; i < nbSimi; i++) {
@@ -239,8 +240,8 @@ function drawIfs(f) {
       s2.a2 = 2 * s4.a2 - s3.a2;
     }
 
-    randomSimis(f, f.components, 3 * nbSimi, nbSimi, nColors, simiColor);
-    randomSimis(f, f.components, 4 * nbSimi, nbSimi, nColors, simiColor);  // XXX
+    randomSimis(f.components, 3 * nbSimi, nbSimi, nColors, simiColor);
+    randomSimis(f.components, 4 * nbSimi, nbSimi, nColors, simiColor);  // XXX
 
     f.count = 0;
   } else {
@@ -257,9 +258,8 @@ function init() {
   width = canvas.width = canvas.clientWidth;
   height = canvas.height = canvas.clientHeight;
 
-  var f = {};
-  initIfs(f);
-  drawIfs(f);
+  initIfs();
+  drawIfs();
 }
 
 document.addEventListener('DOMContentLoaded', init);
