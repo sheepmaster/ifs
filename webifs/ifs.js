@@ -1,4 +1,66 @@
+/*
+ * Copyright (c) 1997 by Massimino Pascal <Pascal.Massimon@ens.fr>
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright notice appear in all copies and that
+ * both that copyright notice and this permission notice appear in
+ * supporting documentation.
+ *
+ * This file is provided AS IS with no warranties of any kind.  The author
+ * shall have no liability with respect to the infringement of copyrights,
+ * trade secrets or any patents by this file or any part thereof.  In no
+ * event will the author be liable for any lost revenue or profits or
+ * other special, indirect and consequential damages.
+ *
+ * If this mode is weird and you have an old MetroX server, it is buggy.
+ * There is a free SuSE-enhanced MetroX X server that is fine.
+ *
+ * When shown ifs, Diana Rose (4 years old) said, "It looks like dancing."
+ */
+
+"use strict";
+
 var context;
+
+var gl;   // The webgl context, to be initialized in init().
+var prog; // Identifies the webgl program.
+var vertexAttributeBuffer;    // Identifies the databuffer where vertex coords are stored.
+var vertexAttributeLocation;  // Identifies the vertex attribute variable in the shader program.
+var pointSizeUniformLocation; // Identifies the uniform that controls the size of points.
+var antialiasedLoc;           // Identifies the uniform that determines whether points are antialiased.
+var transformUniformLocation; // Identifies the coordinate matrix uniform variable.
+
+/**
+ * Applies a coordinate transformation to the webgl context by setting the value
+ * of the coordinateTransform uniform in the shader program.  The canvas will
+ * display the region of the xy-plane with x ranging from xmin to xmax and y
+ * ranging from ymin to ymax.  If ignoreAspect is true, these ranges will fill
+ * the canvas.  If ignoreAspect is missing or is false, one of the x or y
+ * ranges will be expanded, if necessary, so that the aspect ratio is preserved.
+ */
+function coordinateTransform(xmin, xmax, ymin, ymax, ignoreAspect) {
+  if (!ignoreAspect) {
+    var displayAspect = gl.canvas.height / gl.canvas.width;
+    var requestedAspect = Math.abs((ymax-ymin)/(xmax-xmin));
+    if (displayAspect > requestedAspect) {
+      var excess= (ymax-ymin) * (displayAspect/requestedAspect - 1);
+      ymin -= excess/2;
+      ymax += excess/2;
+    }
+    else if (displayAspect < requestedAspect) {
+      var excess = (xmax-xmin) * (requestedAspect/displayAspect - 1);
+      xmin -= excess/2;
+      xmax += excess/2;
+    }
+  }
+  var coordTrans = [
+    2/(xmax-xmin),           0,                       0,
+    0,                       2/(ymax-ymin),           0,
+    -1 - 2*xmin/(xmax-xmin), -1 - 2*ymin/(ymax-ymin), 1
+  ];
+  gl.uniformMatrix3fv(transformUniformLocation, false, coordTrans);
+}
 
 function nRand(n) {
   return Math.floor(Math.random() * n);
@@ -61,11 +123,9 @@ function transform(simi, xo, yo) {
 var f = {};
 // TODO: make a method on Fractal?
 function trace(xo, yo) {
-  for (var i = f.nbSimi - 1; i >= 0; i--) {
-    var cur = f.components[f.nbSimi - i - 1];
+  for (var i = 0; i < f.nbSimi; i++) {
+    var cur = f.components[i];
     var transformed = transform(cur, xo, yo);
-    var xd = Math.ceil();
-    var yd = Math.ceil(transformed.y * f.ly);
     f.buffer[i][2 * f.index[i]] = (1 + transformed.x) * f.lx;
     f.buffer[i][2 * f.index[i] + 1] = (1 + transformed.y) * f.ly;
     f.index[i]++;
@@ -114,11 +174,27 @@ function drawFractal() {
   if (colorIndex >= nColors)
     colorIndex = 0;
 
-  // context.fillRect(0, 0, width, height);
-  drawCanvas();
+  drawWebGL();
+  // drawCanvas();
+}
+
+function drawWebGL() {
+  for (var i = 0; i < f.nbSimi; i++) {
+    var cur = f.components[i];
+    var colorNum = cur.colorIndex + colorIndex % nColors;
+
+    gl.clearColor(0,0,0,1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexAttributeBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, f.buffer[i], gl.DYNAMIC_DRAW);
+    gl.vertexAttribPointer(vertexAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexAttributeLocation);
+    gl.drawArrays(gl.POINTS, 0, f.index[i]);
+  }
 }
 
 function drawCanvas() {
+  // context.fillRect(0, 0, width, height);
   var bufferData = context.createImageData(width, height);
   for (var i = 0; i < height * width; i++) {
     bufferData.data[4 * i + 3] = 255;
@@ -192,17 +268,40 @@ function initIfs() {
     f.index[i] = 0;
   }
 
-  f.speed = 6;
-  f.count = 0;
   f.lx = (width - 1) / 2;
   f.ly = (height - 1) / 2;
 
   f.components = [];  // TODO: length 5 * f.nbSimi
   randomSimis(f.components, 0, 5 * f.nbSimi, nColors, simiColor);
+
+  initWebGL();
 }
 
+function initWebGL() {
+  gl = createWebGLContext('canvas');
+  var vertexShaderSource = getElementText('vshader');
+  var fragmentShaderSource = getElementText('fshader');
+  prog = createProgram(gl,vertexShaderSource,fragmentShaderSource);
+  gl.useProgram(prog);
+  vertexAttributeLocation = gl.getAttribLocation(prog, 'vertexCoords');
+  transformUniformLocation = gl.getUniformLocation(prog, 'coordinateTransform');
+  antialiasedLoc = gl.getUniformLocation(prog, 'antialiased');
+  gl.uniform1f(antialiasedLoc, 1);
+  coordinateTransform(0, width, height, 0);  // Lets me use standard pixel coords.
+  vertexAttributeBuffer = gl.createBuffer();
+  pointSizeUniformLocation = gl.getUniformLocation(prog, 'pointSize');
+  var pointSizeRange = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
+  gl.uniform1f(pointSizeUniformLocation, 2);
+  gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE);
+  gl.enable(gl.BLEND);
+}
+
+var speed = 1000000 / (6 * 30);  // Time interval in ms before we create a new transform.
+var lastTime = Date.now();
+
 function drawIfs() {
-  var u = f.count * f.speed / 1000;
+  var now = Date.now();
+  var u = (now - lastTime) / speed;
   var uu = u * u;
   var v = 1 - u;
   var vv = v * v;
@@ -230,7 +329,7 @@ function drawIfs() {
 
   drawFractal();
 
-  if (f.count >= 1000 / f.speed) {
+  if (u >= 1.0) {
     for (var i = 0; i < nbSimi; i++) {
       var s1 = f.components[i + nbSimi];
       var s2 = f.components[i + 2 * nbSimi];
@@ -250,9 +349,7 @@ function drawIfs() {
     randomSimis(f.components, 3 * nbSimi, nbSimi, nColors, simiColor);
     randomSimis(f.components, 4 * nbSimi, nbSimi, nColors, simiColor);  // XXX
 
-    f.count = 0;
-  } else {
-    f.count++;
+    lastTime = now;
   }
 
   window.requestAnimationFrame(drawIfs);
@@ -260,7 +357,7 @@ function drawIfs() {
 
 function init() {
   var canvas = document.getElementById('canvas');
-  context = canvas.getContext('2d');
+  // context = canvas.getContext('2d');
 
   width = canvas.width = canvas.clientWidth;
   height = canvas.height = canvas.clientHeight;

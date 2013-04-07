@@ -1,6 +1,33 @@
 <html>
 <head>
 <link rel="stylesheet" href="ifs.css">
+<script type="x-shader/x-vertex" id="vshader">
+attribute vec2 vertexCoords;
+uniform mat3 coordinateTransform;
+uniform float pointSize;
+void main() {
+  vec3 transformedCoords = coordinateTransform * vec3(vertexCoords, 1.0);
+  gl_Position = vec4(transformedCoords.xy, 0.0, 1.0);
+  gl_PointSize = pointSize;
+}
+</script>
+<script type="x-shader/x-fragment" id="fshader">
+precision mediump float;
+uniform bool antialiased;
+uniform vec4 color;
+void main() {
+  float dist = distance(gl_PointCoord, vec2(0.5));
+  float alpha = 0.25;  // TODO: should be configurable
+  if (!antialiased) {
+    if (dist > 0.5)
+      discard;
+  } else {
+    alpha *= 1.0 - smoothstep(0.45, 0.5, dist);
+  }
+  gl_FragColor = vec4(0, 1, 0, alpha);
+}
+</script>
+<script src="glutil2d.js"></script>
 <script src="ifs.js"></script>
 </head>
 <body>
