@@ -64,12 +64,11 @@ function trace(xo, yo) {
   for (var i = f.nbSimi - 1; i >= 0; i--) {
     var cur = f.components[f.nbSimi - i - 1];
     var transformed = transform(cur, xo, yo);
-    var xd = Math.ceil(transformed.x * f.lx);
+    var xd = Math.ceil();
     var yd = Math.ceil(transformed.y * f.ly);
-    f.buffer[i].push({
-      x: Math.round(f.lx + xd),
-      y: Math.round(f.ly - yd)
-    });
+    f.buffer[i][2 * f.index[i]] = (1 + transformed.x) * f.lx;
+    f.buffer[i][2 * f.index[i] + 1] = (1 + transformed.y) * f.ly;
+    f.index[i]++;
     if ((f.depth > 0) &&
         (Math.abs(transformed.x - xo) >= 1/256) &&
         (Math.abs(transformed.y - yo) >= 1/256)) {
@@ -95,7 +94,7 @@ function drawFractal() {
   }
 
   for (var i = 0; i < f.buffer.length; i++) {
-    f.buffer[i] = [];
+    f.index[i] = 0;
   }
 
   for (var i = 0; i < f.nbSimi; i++) {
@@ -116,7 +115,10 @@ function drawFractal() {
     colorIndex = 0;
 
   // context.fillRect(0, 0, width, height);
+  drawCanvas();
+}
 
+function drawCanvas() {
   var bufferData = context.createImageData(width, height);
   for (var i = 0; i < height * width; i++) {
     bufferData.data[4 * i + 3] = 255;
@@ -126,9 +128,10 @@ function drawFractal() {
     var colorNum = cur.colorIndex + colorIndex % nColors;
     // glColor4f(colors[colorNum].red, colors[colorNum].green, colors[colorNum].blue, alpha);
     // glBegin(GL_POINTS);
-    for (var j = 0; j < f.buffer[i].length; j++) {
-      var coords = f.buffer[i][j];
-      var index = 4 * (coords.y * width + coords.x) + 1;
+    for (var j = 0; j < f.index[i]; j++) {
+      var x = Math.round(f.buffer[i][2 * j]);
+      var y = Math.round(f.buffer[i][2 * j + 1]);
+      var index = 4 * (y * width + x) + 1;
       bufferData.data[index] = 255 * alpha + bufferData.data[index] * (1-alpha);
       // console.log(.x, f.buffer[i][j].y);
       // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
@@ -179,11 +182,14 @@ function initIfs() {
     }
   }
   f.nbSimi = r;
-  f.maxPt = Math.pow(f.nbSimi - 1, f.depth + 1);
+  f.maxPt = Math.pow(f.nbSimi, f.depth + 2);
 
-  f.buffer = [];  // TODO: length f.nbSimi
-  for (var i = 0; i < f.nbSimi; i++) {
-    f.buffer[i] = [];  // TODO: length f.maxPt
+  f.buffer = new Array(f.nbSimi);
+  f.index = new Array(f.nbSimi);
+  for (var i = 0; i < f.buffer.length; i++) {
+    var buf = new ArrayBuffer(8 * f.maxPt);
+    f.buffer[i] = new Float32Array(buf);
+    f.index[i] = 0;
   }
 
   f.speed = 6;
