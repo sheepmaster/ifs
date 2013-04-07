@@ -80,7 +80,7 @@ function trace(xo, yo) {
   }
 }
 
-var alpha = 1;
+var alpha = 0.25;
 
 var nColors = 200;
 var colorIndex = 0;  // XXX
@@ -128,7 +128,8 @@ function drawFractal() {
     // glBegin(GL_POINTS);
     for (var j = 0; j < f.buffer[i].length; j++) {
       var coords = f.buffer[i][j];
-      bufferData.data[4 * (coords.y * width + coords.x) + 1] = 255;
+      var index = 4 * (coords.y * width + coords.x) + 1;
+      bufferData.data[index] = 255 * alpha + bufferData.data[index] * (1-alpha);
       // console.log(.x, f.buffer[i][j].y);
       // glVertex2i(f.buffer[i][j].x, f.buffer[i][j].y);
     }
