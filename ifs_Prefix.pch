@@ -1,8 +1,0 @@
-//
-// Prefix header for all source files of the 'ifs' target in the 'ifs' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <Cocoa/Cocoa.h>
-#endif
