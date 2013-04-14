@@ -29,6 +29,7 @@ var vertexAttributeBuffer;    // Identifies the databuffer where vertex coords a
 var vertexAttributeLocation;  // Identifies the vertex attribute variable in the shader program.
 var pointSizeUniformLocation; // Identifies the uniform that controls the size of points.
 var antialiasedLoc;           // Identifies the uniform that determines whether points are antialiased.
+var colorLoc;
 var transformUniformLocation; // Identifies the coordinate matrix uniform variable.
 
 /**
@@ -78,8 +79,38 @@ function halfGaussRand(c, a, s) {
   return c + y;  // TODO: unify with gaussRand()
 }
 
+function HSVToRGB(h, s, v) {
+  if(s == 0) {
+    // achromatic (grey)
+    return [v, v, v];
+  }
+  h *= 6;      // sector 0 to 5
+  var i = Math.floor(h);
+  var f = h - i;      // factorial part of h
+  var p = v * (1 - s);
+  var q = v * (1 - s * f);
+  var t = v * (1 - s * (1 - f));
+  switch (i) {
+    case 0:
+      return [v, t, p];
+    case 1:
+      return [q, v, p];
+    case 2:
+      return [p, v, t];
+    case 3:
+      return [p, q, v];
+    case 4:
+      return [t, p, v];
+    case 5:
+      return [v, p, q];
+    default:
+      throw new Error();
+  }
+}
+
 var globalColorIndex = 0;  // XXX
-var colorSpan = 50;
+var nColors = 200;
+var colorSpan = nColors/50;
 
 // TODO: make a method on Fractal?
 function randomSimis(simis, start, offset, nColors, colorType) {
@@ -141,8 +172,18 @@ function trace(xo, yo) {
 
 var alpha = 0.25;
 
-var nColors = 200;
 var colorIndex = 0;  // XXX
+
+function randomColors(nColors) {
+  var s = Math.random() * 0.4 + 0.6;
+  var v = Math.random() * 0.4 + 0.6;
+  var dh = 1.0/nColors;
+  var colors = [];
+  for (var i = 0; i < nColors; i++) {
+    colors.push(HSVToRGB(i * dh, s, v));
+  }
+  return colors;
+}
 
 function drawFractal() {
   for (var i = 0; i < f.nbSimi; i++) {
@@ -179,12 +220,13 @@ function drawFractal() {
 }
 
 function drawWebGL() {
+  gl.clearColor(0,0,0,1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
   for (var i = 0; i < f.nbSimi; i++) {
     var cur = f.components[i];
-    var colorNum = cur.colorIndex + colorIndex % nColors;
+    var colorNum = (cur.colorIndex + colorIndex) % nColors;
 
-    gl.clearColor(0,0,0,1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform3fv(colorLoc, colors[colorNum]);
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexAttributeBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, f.buffer[i], gl.DYNAMIC_DRAW);
     gl.vertexAttribPointer(vertexAttributeLocation, 2, gl.FLOAT, false, 0, 0);
@@ -221,6 +263,8 @@ var simiColor = 1;
 
 var width;
 var height;
+
+var colors;
 
 function initIfs() {
   var r = nRand(4) + 2;  // Number of centers
@@ -274,6 +318,8 @@ function initIfs() {
   f.components = [];  // TODO: length 5 * f.nbSimi
   randomSimis(f.components, 0, 5 * f.nbSimi, nColors, simiColor);
 
+  colors = randomColors(nColors);
+
   initWebGL();
 }
 
@@ -286,6 +332,7 @@ function initWebGL() {
   vertexAttributeLocation = gl.getAttribLocation(prog, 'vertexCoords');
   transformUniformLocation = gl.getUniformLocation(prog, 'coordinateTransform');
   antialiasedLoc = gl.getUniformLocation(prog, 'antialiased');
+  colorLoc = gl.getUniformLocation(prog, 'color');
   gl.uniform1f(antialiasedLoc, 1);
   coordinateTransform(0, width, height, 0);  // Lets me use standard pixel coords.
   vertexAttributeBuffer = gl.createBuffer();

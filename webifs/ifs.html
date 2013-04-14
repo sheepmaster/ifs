@@ -14,8 +14,9 @@ void main() {
 <script type="x-shader/x-fragment" id="fshader">
 precision mediump float;
 uniform bool antialiased;
-uniform vec4 color;
+uniform vec3 color;
 void main() {
+  // vec3 color = vec3(0., 1., 0.);
   float dist = distance(gl_PointCoord, vec2(0.5));
   float alpha = 0.25;  // TODO: should be configurable
   if (!antialiased) {
@@ -24,7 +25,7 @@ void main() {
   } else {
     alpha *= 1.0 - smoothstep(0.45, 0.5, dist);
   }
-  gl_FragColor = vec4(0, 1, 0, alpha);
+  gl_FragColor = vec4(color, alpha);
 }
 </script>
 <script src="glutil2d.js"></script>
